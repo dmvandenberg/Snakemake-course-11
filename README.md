@@ -4,6 +4,8 @@ In this course the aim was to create a pipeline for the retrieval of biological 
 
 <img src="./workflow.svg">
 
+This workflow can be created using the snakemake pipeline as well.
+
 ## Installation
 For running this pipeline a few dependencies (main dependencies listed below) should be installed on your system, for this reason a 'environment.yaml' file is provided in the scripts section of this repository. To create the right environment the following line of code should be executed in your terminal.
 
