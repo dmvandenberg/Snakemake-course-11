@@ -18,10 +18,10 @@ to activate the environment run:
 The <env name> tag should be replaced with the name you want to give the environment
   
 ### Dependencies
--[conda](https://conda.io/docs/)
--[mygene](http://mygene.info/) >= 3.0.0: Xin J, Mark A, Afrasiabi C, Tsueng G, Juchler M, Gopal N, Stupp GS, Putman TE, Ainscough BJ, Griffith OL, Torkamani A, Whetzel PL, Mungall CJ, Mooney SD, Su AI, Wu C (2016) High-performance web services for querying gene and variant annotation. Genome Biology 17(1):1-7
--[biopython](https://biopython.org/) >= 1.71: Cock, P. J., Antao, T., Chang, J. T., Chapman, B. A., Cox, C. J., Dalke, A., ... & De Hoon, M. J. (2009). Biopython: freely available Python tools for computational molecular biology and bioinformatics. Bioinformatics, 25(11), 1422-1423.
--[snakemake](https://snakemake.readthedocs.io/en/stable/) >= 4.0.0: Köster, J., & Rahmann, S. (2012). Snakemake—a scalable bioinformatics workflow engine. Bioinformatics, 28(19), 2520-2522.
+- [conda](https://conda.io/docs/)
+- [mygene](http://mygene.info/) >= 3.0.0: Xin J, Mark A, Afrasiabi C, Tsueng G, Juchler M, Gopal N, Stupp GS, Putman TE, Ainscough BJ, Griffith OL, Torkamani A, Whetzel PL, Mungall CJ, Mooney SD, Su AI, Wu C (2016) High-performance web services for querying gene and variant annotation. Genome Biology 17(1):1-7
+- [biopython](https://biopython.org/) >= 1.71: Cock, P. J., Antao, T., Chang, J. T., Chapman, B. A., Cox, C. J., Dalke, A., ... & De Hoon, M. J. (2009). Biopython: freely available Python tools for computational molecular biology and bioinformatics. Bioinformatics, 25(11), 1422-1423.
+- [snakemake](https://snakemake.readthedocs.io/en/stable/) >= 4.0.0: Köster, J., & Rahmann, S. (2012). Snakemake—a scalable bioinformatics workflow engine. Bioinformatics, 28(19), 2520-2522.
 
 
 ## Running
