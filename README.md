@@ -15,7 +15,7 @@ to activate the environment run:
 
 ```source activate <env name>```
 
-The <env name> tag should be replaced with the name you want to give the environment
+The <env name> tag should be replaced with the name you want to give the environment.
   
 ### Dependencies
 - [conda](https://conda.io/docs/)
@@ -26,11 +26,11 @@ The <env name> tag should be replaced with the name you want to give the environ
 
 ## Running
 
-To execute the snakemake pipeline clone this github repository to your system in a folder. Go to this folder and make sure you activated your created environment, then run the following command
+To execute the snakemake pipeline clone this github repository to your system in a folder. Go to this folder and make sure you activated your created environment, then run the following command:
 
 ```snakemake -s scripts/Snakefile make_report```
 
-The output generated will appear in your folder in a directory 'output'
+The output generated will appear in your folder in a directory 'output'.
 
 ## Output
 
