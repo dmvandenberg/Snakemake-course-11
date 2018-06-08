@@ -1,0 +1,2 @@
+# Snakemake course 11
+
