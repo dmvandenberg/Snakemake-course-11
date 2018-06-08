@@ -1,0 +1,143 @@
+rule iconv:
+    message:
+        "converting file from ISO-8859-1 to UTF-8"
+    input:
+        "data/RNA-Seq-counts.txt"
+    output:
+        "data/RNA-Seq-counts_converted.txt"
+    shell:
+        "iconv -c -f ISO-8859-1 -t UTF-8 {input} > {output}"
+
+#rule gene_ex:
+#    input:
+#        "data/RNA-Seq-counts_converted.txt"
+#    output:
+#        "output/gene-ids.txt"
+#    shell:
+#        "javac ExtractUnit.java {input} {output}"
+
+rule gene_ex:
+    message:
+        "extracting gene id's from: {input}"
+    input:
+        "data/RNA-Seq-counts_converted.txt"
+    output:
+        "output/gene-ids.txt"
+    run:
+        with open(input[0]) as file:
+            with open(output[0], 'w') as out:
+                for line in file:
+                    if not line.startswith("#") and not line.startswith("ID"):
+                        out.write(line.split("\t")[0]+"\n")
+
+rule id_conv:
+    message:
+        "running mygene on gene id's"
+    input:
+        "output/gene-ids.txt"
+    output:
+        "output/conv-genes.txt"
+    run:
+        import mygene
+        mg = mygene.MyGeneInfo()
+        genes = []
+        with open(input[0]) as file:
+            for line in file:
+                genes.append(line.strip())
+        df = mg.querymany(genes, scopes="all", fields="query,symbol,name,entrezgene,accession,uniprot,refseq",
+                          as_dataframe=True)
+        df.to_csv(output[0], header=True, sep="\t", encoding="UTF-8")
+
+rule pm_ids:
+    message:
+        "retrieving pubmed id's"
+    input:
+        a="output/gene-ids.txt"
+    output:
+        a="output/pm-ids.txt"
+    run:
+        from Bio import Entrez
+        Entrez.email = "A.N.Other@example.com"
+        with open(input[0]) as file:
+            with open(output[0], 'a+') as out:
+                out.write("query\tpubmed\n")
+                for line in file:
+                    handle = Entrez.esearch(db="pubmed", term=line.strip())
+                    record = Entrez.read(handle)
+                    out.write(line.strip()+"\t"+str(record["IdList"])+"\n")
+
+rule sequences:
+    message:
+        "retrieving sequences"
+    input:
+        a="output/conv-genes.txt"
+    output:
+        a="output/sequences.txt"
+    run:
+        from Bio import Entrez
+        import re
+        Entrez.email = "A.N.Other@example.com"
+        with open(input[0]) as file:
+            with open(output[0], 'a+') as out:
+                out.write("query\tsequence\n")
+                for line in file:
+                    qry = line[:-1].split("\t")[0]
+                    acc = line[:-1].split("\t")[3]
+                    try:
+                        id = re.search('CCC[0-9]{5}.[0-9]', acc).group(0)
+                        seq = Entrez.efetch(db="protein", id=id,
+                                            rettype="fasta", retmode="text")
+                        sequence = seq.read().replace("\n","").rsplit("]", 1)[1]
+                    except:
+                        continue
+                    out.write(qry+"\t"+sequence+"\n")
+
+rule kegg_meister:
+    message:
+        "retrieving kegg pathways"
+    input:
+        a = "output/gene-ids.txt"
+    output:
+        a = "output/pathways.txt"
+    run:
+        from Bio.KEGG import REST
+        from Bio.KEGG import Enzyme
+        import urllib
+        with open(input[0]) as file:
+            with open(output[0],'w') as out:
+                out.write("query\tkegg\n")
+                for id in file:
+                    pathways = []
+                    try:
+                        q=REST.kegg_get("lpl:" + id)
+                        for line in q:
+                            if line.split(" ")[0] == "PATHWAY":
+                                pathways.append(line.replace("    ", "\t").replace("\n", "").split("\t")[1] + ";")
+                                line = q.readline()
+                                while(line.split(" ")[0] == ""):
+                                    pathways.append(line.replace("    ", "\t").strip("\t").replace("\n", "").split("\t")[0] + ";")
+                                    line = q.readline()
+                        out.write(id[:-1]+"\t"+" ".join(pathways)[1:-1]+"\n")
+                    except:
+                        continue
+
+rule make_report:
+    message:
+        "creating report"
+    input:
+        a="output/conv-genes.txt",
+        b="output/pm-ids.txt",
+        c="output/sequences.txt",
+        d="output/pathways.txt"
+    output:
+        a = "output/report.txt"
+    shell:
+        'Rscript --vanilla scripts/filter.R {input.a} {input.b} {input.c} {input.d} {output.a}'
+
+rule dag:
+    message:
+        "creating workflow visualization"
+    output:
+        a="output/workflow.svg"
+    shell:
+        "snakemake -s scripts/Snakefile --dag make_report | dot -Tsvg > {output.a}"

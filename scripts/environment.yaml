@@ -1,0 +1,13 @@
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - graphviz=2.38.0
+  - python=3.6.2
+  - snakemake=4.0.0
+  - pyyaml=3.12
+  - pandas=0.22.0
+  - mygene=3.0.0
+  - biopython=1.71
