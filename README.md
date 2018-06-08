@@ -2,7 +2,6 @@
 
 In this course the aim was to create a pipeline for the retrieval of biological information for the provided 'RNA-Seq-counts.txt'.  We created a pipeline in Snakemake to retrieve pubmed protein sequences, kegg pathways, gene functions and gene names for each gene id in 'RNA-Seq-counts'. Besides this the pipeline also retrieves database accession codes for pubmed, uniprot, ncbi protein and ncbi gene. The workflow of this pipeline is shown below.
 
-![Alt text](./workflow.svg)
 <img src="./workflow.svg">
 
 ## Installation
